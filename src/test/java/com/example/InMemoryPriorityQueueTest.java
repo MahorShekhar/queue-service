@@ -17,11 +17,12 @@ public class InMemoryPriorityQueueTest {
 	
 	@Test
 	public void testSendMessage(){
-		qs.push(queueUrl, "Good message!");
+		String msgBody = "{ \"name\":\"John\", \"age\":30, \"car\":null }";
+		qs.push(queueUrl, msgBody);
 		Message msg = qs.pull(queueUrl);
 
 		assertNotNull(msg);
-		assertEquals("Good message!", msg.getBody());
+		assertEquals(msgBody, msg.getBody());
 	}
 	
 	@Test
