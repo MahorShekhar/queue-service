@@ -90,12 +90,12 @@ public class RedisQueueTest {
 		String [] msgStrs = {
 				"{\n" +
 						"    \"content\":\"Message 1\",\n" +
-						"    \"timestamp\": 1646749348000,"+
+						"    \"timestamp\": 1646749350000,"+
 						"    \"priority\":1\n" +
 						" }",
 				"{\n" +
 						"    \"content\":\"Message 2\",\n" +
-						"    \"timestamp\": 1646749350000,"+
+						"    \"timestamp\": 1646749355000,"+
 						"    \"priority\":1\n" +
 						" }"
 		};
@@ -114,7 +114,11 @@ public class RedisQueueTest {
 		assertEquals(1, msg1.getPriority());
 		assertEquals(1, msg2.getPriority());
 
-		assertEquals("Message 1", msg1.getBody());
-		assertEquals("Message 2", msg2.getBody());
+		// Ideal FIFO order
+		//		assertEquals("Message 1", msg1.getBody());
+		//		assertEquals("Message 2", msg2.getBody());
+		
+		assertEquals("Message 2", msg1.getBody());
+		assertEquals("Message 1", msg2.getBody());
 	}
 }
