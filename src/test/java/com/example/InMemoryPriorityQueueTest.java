@@ -113,7 +113,7 @@ public class InMemoryPriorityQueueTest {
 	}
 	
 	@Test
-	public void testFIFO2Msgs(){
+	public void testFIFO3Msgs(){
 		String [] msgStrs = {
 				"{\n" +
 				"    \"name\":\"John1\",\n" +
@@ -124,12 +124,18 @@ public class InMemoryPriorityQueueTest {
 				"    \"name\":\"John2\",\n" +
 				"    \"age\":30,\n" +
 				"    \"priority\":1\n" +
+				" }",
+				"{\n" +
+				"    \"name\":\"John3\",\n" +
+				"    \"age\":30,\n" +
+				"    \"priority\":1\n" +
 				" }"
 		};
 
-		// push both messages
+		// push all 3 messages
 		qs.push(queueUrl, msgStrs[0]);
 		qs.push(queueUrl, msgStrs[1]);
+		qs.push(queueUrl, msgStrs[2]);
 
 		// pull first message
 		Message msg1 = qs.pull(queueUrl);
@@ -139,12 +145,18 @@ public class InMemoryPriorityQueueTest {
 		Message msg2 = qs.pull(queueUrl);
 		qs.delete(queueUrl , msg2.getReceiptId());
 
-		// both message will be of same priority
+		// pull third message
+		Message msg3 = qs.pull(queueUrl);
+		qs.delete(queueUrl , msg3.getReceiptId());
+
+		// all messages will be of same priority
 		assertEquals(1, msg1.getPriority());
 		assertEquals(1, msg2.getPriority());
+		assertEquals(1, msg3.getPriority());
 
-		// assert first pulled message has msgBody1 and likewise for second message
-		org.junit.Assert.assertTrue(msgStrs[0].equals(msg1.getBody())
-				&& msgStrs[1].equals(msg2.getBody()));
+		// assert first pulled message has msgBody1 and likewise for second & third message
+		assertEquals(msgStrs[0],msg1.getBody());
+		assertEquals(msgStrs[1],msg2.getBody());
+		assertEquals(msgStrs[2],msg3.getBody());
 	}
 }

@@ -17,7 +17,7 @@ public class InMemoryPriorityQueueService implements QueueService {
   public void push(String queueUrl, String msgBody) {
     Queue<Message> queue = queues.get(queueUrl);
     if (queue == null) {
-      queue = new PriorityQueue<>(Comparator.comparingInt(Message::getPriority).reversed());
+      queue = new PriorityQueue<>(Comparator.comparingInt(Message::getPriority).reversed().thenComparingLong(Message::getTimestamp));
       queues.put(queueUrl, queue);
     }
 

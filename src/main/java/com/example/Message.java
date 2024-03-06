@@ -14,13 +14,17 @@ public class Message {
 
   private int priority;
 
+  private long timestamp;
+
   Message(String msgBody) {
     this.msgBody = msgBody;
+    this.timestamp = System.currentTimeMillis();
   }
 
   Message(String msgBody, String receiptId) {
     this.msgBody = msgBody;
     this.receiptId = receiptId;
+    this.timestamp = System.currentTimeMillis();
   }
 
   Message(String msgBody, int priority) {
@@ -68,5 +72,9 @@ public class Message {
 
   protected int getPriority() {
     return priority;
+  }
+
+  protected long getTimestamp() {
+    return timestamp;
   }
 }
