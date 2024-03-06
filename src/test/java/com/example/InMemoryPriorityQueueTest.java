@@ -159,4 +159,20 @@ public class InMemoryPriorityQueueTest {
 		assertEquals(msgStrs[1],msg2.getBody());
 		assertEquals(msgStrs[2],msg3.getBody());
 	}
+
+	@Test
+	public void testAckTimeout(){
+
+		String msgBody = "{ \"name\":\"John\", \"age\":30, \"car\":null, \"priority\":1 }";
+		InMemoryPriorityQueueService queueService = new InMemoryPriorityQueueService() {
+			long now() {
+				return System.currentTimeMillis() + 1000 * 30 + 1;
+			}
+		};
+
+		queueService.push(queueUrl, msgBody);
+		queueService.pull(queueUrl);
+		Message msg = queueService.pull(queueUrl);
+		assertTrue(msg != null && msg.getBody() == msgBody);
+	}
 }
