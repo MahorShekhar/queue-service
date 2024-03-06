@@ -23,6 +23,8 @@ public class RedisQueueTest {
 		assertNotNull(msg);
 		assertEquals("Good message!", msg.getBody());
 		assertEquals(1, msg.getPriority());
+
+		qs.delete(queueUrl, msg.getReceiptId());
 	}
 
 	@Test
@@ -35,6 +37,8 @@ public class RedisQueueTest {
 		assertEquals("Good message!", msg.getBody());
 		assertEquals(0, msg.getPriority());
 		assertTrue(msg.getReceiptId() != null && msg.getReceiptId().length() > 0);
+
+		qs.delete(queueUrl, msg.getReceiptId());
 	}
 
 	@Test
@@ -50,12 +54,15 @@ public class RedisQueueTest {
 
 		// pull 1st message and delete it
 		Message pulledMsg1 = qs.pull(queueUrl);
+		qs.delete(queueUrl, pulledMsg1.getReceiptId());
 
 		// pull 2nd message and delete it
 		Message pulledMsg2 = qs.pull(queueUrl);
+		qs.delete(queueUrl, pulledMsg2.getReceiptId());
 
 		// pull 3rd message and delete it
 		Message pulledMsg3 = qs.pull(queueUrl);
+		qs.delete(queueUrl, pulledMsg3.getReceiptId());
 
 		// assert all 3 pulled messages are not null
 		assertNotNull(pulledMsg1);
@@ -106,9 +113,11 @@ public class RedisQueueTest {
 
 		// pull first message
 		Message msg1 = qs.pull(queueUrl);
+		qs.delete(queueUrl, msg1.getReceiptId());
 
 		// pull second message
 		Message msg2 = qs.pull(queueUrl);
+		qs.delete(queueUrl, msg2.getReceiptId());
 
 		// both message will be of same priority
 		assertEquals(1, msg1.getPriority());
@@ -117,7 +126,7 @@ public class RedisQueueTest {
 		// Ideal FIFO order
 		//		assertEquals("Message 1", msg1.getBody());
 		//		assertEquals("Message 2", msg2.getBody());
-		
+
 		assertEquals("Message 2", msg1.getBody());
 		assertEquals("Message 1", msg2.getBody());
 	}

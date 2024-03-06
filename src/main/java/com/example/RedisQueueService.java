@@ -20,8 +20,8 @@ public class RedisQueueService implements QueueService {
   private final String redisApiToken;
 
   private static final String REDIS_ZADD_COMMAND = "zadd";
-  private static final String REDIS_ZREM_COMMAND = "zadd";
   private static final String REDIS_ZPOPMAX_COMMAND = "zpopmax";
+  private static final String REDIS_REV_RANGE_COMMAND = "zrevrange";
 
 
   RedisQueueService() {
@@ -47,14 +47,16 @@ public class RedisQueueService implements QueueService {
   @Override
   public Message pull(String queueUrl) {
 
-    String redisResponse = makeGetRequest(redisEndpointUrl + "/"+ REDIS_ZPOPMAX_COMMAND+ "/"+ queueUrl);
+    String redisResponse = makeGetRequest(redisEndpointUrl + "/"+ REDIS_REV_RANGE_COMMAND+ "/"+ queueUrl+"/0/0");
 
     return createMessageFromRedisResponse(redisResponse);
   }
 
+  // for now, This deletes peek element from redis sorted set.
+  // will try to find a solution if we can delete using receipt id
   @Override
   public void delete(String queueUrl, String receiptId) {
-    // pull method is deleting the message as well
+    makeGetRequest(redisEndpointUrl + "/"+ REDIS_ZPOPMAX_COMMAND+ "/"+ queueUrl);
   }
 
   private int extractPriorityFromJson(String msgBody) {
